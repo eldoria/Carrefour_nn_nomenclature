@@ -71,6 +71,8 @@ def auto_encoder_y(label_name):
     result = []
     words = {possibilities[i]: i for i in range(size)}
 
+    print(words)
+
     for l in label_name:
         nb = words[l]
         val = number_to_binary(nb, size)
@@ -82,7 +84,7 @@ def auto_encoder_y(label_name):
 def delete_duplicate(x, y):
     df = pd.concat([x, y], axis=1)
 
-    df.drop_duplicates(subset="product_name", keep=False, inplace=True)
+    df.drop_duplicates(subset="product_name", keep="first", inplace=True)
 
     return df["product_name"], df["hypDepartmentDesc"]
 
@@ -91,7 +93,7 @@ def get_data(f, repartition):
     products = pd.read_csv(f, sep=';')
 
     print("nombre de lignes avant de supprimer celles sans rayon : " + str(products.shape[0]))
-    # élimine les preoduits sans nom de rayon associé
+    # élimine les produits sans nom de rayon associé
     products = products[~products['hypSectorDesc'].isnull()]
     print("nombre de lignes après la supression de celles sans rayon : " + str(products.shape[0]))
 
@@ -108,6 +110,7 @@ def get_data(f, repartition):
     print("nombre de données après la supression de doublons : " + str(len(x)))
 
     size_y = y.nunique()
+    print(size_y)
 
     # Associe des numéros pour chaque rayon et transforme les numéros en un vecteur binaire
     # ex : 28 rayons, le rayon ayant pour num 0 aura comme vecteur : (1, 0, 0, 0 , ..., 0) le vecteur ayant 28 places car
