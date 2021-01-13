@@ -42,16 +42,22 @@ def plot_log(all_logs):
     plt.show()
 
 
-def auto_encoder_x(products_name):
+def auto_encoder_x(training_data, testing_data):
+    # 20 000 mots maximum à garder et remplace les mots inconnus avec le token out-of-value
     tokenizer = Tokenizer(num_words=20000, oov_token="<OOV>")
 
-    tokenizer.fit_on_texts(products_name)
+    # Crée le dictionnaire
+    tokenizer.fit_on_texts(training_data)
 
-    sequences = tokenizer.texts_to_sequences(products_name)
+    # Les mots sont remplacées par leurs numéros associés
+    sequences_training = tokenizer.texts_to_sequences(training_data)
+    sequences_testing = tokenizer.texts_to_sequences(testing_data)
 
-    padded = pad_sequences(sequences, padding='post', truncating='pre')
+    # Ajoute du padding pour que chaque ligne ait la même taille
+    padded_training = pad_sequences(sequences_training, padding='post', truncating='pre', maxlen=20)
+    padded_testing = pad_sequences(sequences_testing, padding='post', truncating='pre', maxlen=20)
 
-    return padded
+    return padded_training, padded_testing
 
 
 def number_to_binary(number, size):
@@ -84,35 +90,49 @@ def delete_duplicate(x, y):
 def get_data(f, repartition):
     products = pd.read_csv(f, sep=';')
 
+    print("nombre de lignes avant de supprimer celles sans rayon : " + str(products.shape[0]))
+    # élimine les preoduits sans nom de rayon associé
     products = products[~products['hypSectorDesc'].isnull()]
+    print("nombre de lignes après la supression de celles sans rayon : " + str(products.shape[0]))
 
-    x = products['product_name']
-    y = products['hypDepartmentDesc']
+    x = products['product_name']  # récupérer le nom des produits
+    y = products['hypDepartmentDesc']  # récupérer le nom des rayons
 
-    print("NUMBER OF DATA BEFORE ELIMINATION OF duplicate : " + str(len(x)) + "/" + str(len(y)))
+    print("apercu des données : " + x.head())
+    print("apercu des labels : " + y.head())
+
+    print("nombre de données avant la supression des doublons : " + str(len(x)))
 
     x, y = delete_duplicate(x, y)
 
-    print("NUMBER OF DATA AFTER ELIMINATION OF duplicate : " + str(len(x)) + "/" + str(len(y)))
+    print("nombre de données après la supression de doublons : " + str(len(x)))
 
     size_y = y.nunique()
 
-    x = auto_encoder_x(x)
+    # Associe des numéros pour chaque rayon et transforme les numéros en un vecteur binaire
+    # ex : 28 rayons, le rayon ayant pour num 0 aura comme vecteur : (1, 0, 0, 0 , ..., 0) le vecteur ayant 28 places car
+    # il y a 28 valeurs différentes de y
     y = np.array(auto_encoder_y(y))
 
+    # Sépare en données d'entrainement et de test
     x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size=repartition)
+
+    # Convertit les mots en numéro pour analyse par nlp
+    x_tr, x_te = auto_encoder_x(x_tr, x_te)
 
     return x_tr, x_te, y_tr, y_te, size_y
 
 
 def neural_network(size_y, batch_size):
     model = keras.Sequential([
-        Embedding(15000, 128, input_length=25),
-        LSTM(64, return_sequences=True),
-        LSTM(32, return_sequences=True),
-        LSTM(16),
-        Dense(64, kernel_regularizer=keras.regularizers.l2(0.01)),
-        Dense(32, kernel_regularizer=keras.regularizers.l2(0.01)),
+        Embedding(15000, 128, input_length=20),
+        LSTM(48, return_sequences=True),
+        LSTM(48, return_sequences=True),
+        LSTM(48),
+        Dense(64),
+        Dropout(0.4),
+        Dense(32),
+        Dropout(0.4),
         Dense(size_y, activation=keras.activations.softmax)
     ])
 
@@ -122,7 +142,7 @@ def neural_network(size_y, batch_size):
                   metrics=keras.metrics.categorical_accuracy)
 
     logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=150, validation_data=(x_test, y_test)
-                     , callbacks=keras.callbacks.EarlyStopping(monitor='val_loss', patience=10), verbose=2)
+                     , callbacks=keras.callbacks.EarlyStopping(monitor='val_loss', patience=20), verbose=2)
 
     return logs
 
