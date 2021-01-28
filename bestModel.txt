@@ -1,0 +1,36 @@
+GRU :
+
+best accuracy : 90.67 % -> produits_carrefour_nomenclatures_2
+best accuracy : 89.99 % -> carrefour_prodcuts_cleaned
+
+Embedding(nb_words + 1, 200, input_length=max_size_word),
+GRU(64, dropout=0.23, return_sequences=True),
+LayerNormalization(),
+GRU(32, dropout=0.23, return_sequences=True),
+LayerNormalization(),
+GRU(16, dropout=0.23),
+LayerNormalization(),
+Dense(64),
+LayerNormalization(),
+Dense(48),
+Dense(size_y, activation=keras.activations.softmax)
+
+
+
+LSTM :
+
+best accuracy : 89.33 %
+
+batch_size = 2048
+
+Embedding(nb_words + 1, 256, input_length=max_size_word),
+LSTM(64, dropout=0.2, return_sequences=True),
+LayerNormalization(),
+LSTM(32, dropout=0.2, return_sequences=True),
+LayerNormalization(),
+LSTM(16, dropout=0.2),
+LayerNormalization(),
+Dense(96),
+LayerNormalization(),
+Dense(64),
+Dense(size_y, activation=keras.activations.softmax)

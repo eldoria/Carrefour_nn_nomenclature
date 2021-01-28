@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6f0ae239-d3ff-4697-9a9e-9b4ec64d6418" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/bestModel.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cleaning_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/carrefour_products.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/produits_carrefour_nomenclatures_cleaned_1.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/stop_words_nltk.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/stop_words_spacy.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_1024_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_1024_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_2048_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_2048_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_512_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_0_512_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_1024_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_1024_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_2048_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_2048_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_512_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_1_512_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_1024_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_1024_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_1512_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_1512_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_2048_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_2_2048_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_1024_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_1024_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_1512_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_1512_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_2048_accuracy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/plot_3_2048_loss.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/checkpoint" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt.data-00000-of-00001" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt.index" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebook nomenclature produits carrefour.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebook nomenclature produits carrefour.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/algo_tokenizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/produits_carrefour_nomenclatures.csv" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1mhdzZxo2ZOqQ841JV7d0wnjvsS" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Documents\Carrefour\NLP\data" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.cleaning_data">
+    <configuration name="cleaning_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="NLP" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cleaning_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train_model" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="NLP" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/train_model.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.cleaning_data" />
+      <item itemvalue="Python.train_model" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.cleaning_data" />
+        <item itemvalue="Python.train_model" />
+        <item itemvalue="Python.train_model" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6f0ae239-d3ff-4697-9a9e-9b4ec64d6418" name="Default Changelist" comment="" />
+      <created>1609950020460</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1609950020460</updated>
+      <workItem from="1609950021661" duration="3908000" />
+      <workItem from="1610016736312" duration="58000" />
+      <workItem from="1610121172373" duration="11088000" />
+      <workItem from="1610185977010" duration="204000" />
+      <workItem from="1610352780699" duration="17026000" />
+      <workItem from="1610452477988" duration="8453000" />
+      <workItem from="1610531873618" duration="12890000" />
+      <workItem from="1610612907353" duration="23467000" />
+      <workItem from="1610694373697" duration="487000" />
+      <workItem from="1610695683661" duration="16334000" />
+      <workItem from="1610797761543" duration="38000" />
+      <workItem from="1611564750464" duration="14997000" />
+      <workItem from="1611590182072" duration="10821000" />
+      <workItem from="1611648778350" duration="25460000" />
+      <workItem from="1611735274256" duration="7165000" />
+      <workItem from="1611747923358" duration="8318000" />
+      <workItem from="1611758734535" duration="4166000" />
+      <workItem from="1611822236299" duration="308000" />
+      <workItem from="1611822766726" duration="160000" />
+      <workItem from="1611822939410" duration="3068000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/NLP$algo_tokenizer.coverage" NAME="algo_tokenizer Coverage Results" MODIFIED="1610718244432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP$train_model__1_.coverage" NAME="train_model Coverage Results" MODIFIED="1611571783952" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP$cleaning_data.coverage" NAME="cleaning_data Coverage Results" MODIFIED="1611829358954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1611823414211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
