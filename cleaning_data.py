@@ -1,7 +1,7 @@
 import nltk
 from nltk.corpus import stopwords
 import pandas as pd
-from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
+# from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
 import re
 
 
@@ -13,7 +13,8 @@ base_folder = "./data"
 file_stop_words = f"{base_folder}/stop_words_nltk.txt"
 
 file_source = f"{base_folder}/carrefour_products.csv"
-file_destination = f"{base_folder}/carrefour_products_cleaned.csv"
+file_destination = f"{base_folder}/carrefour_products_cleaned_maj.csv"
+file_destination_2 = f"{base_folder}/carrefour_products_cleaned_min.csv"
 
 
 file_source_cleaned_1 = f"{base_folder}/produits_carrefour_nomenclatures_cleaned_1.csv"
@@ -45,8 +46,9 @@ def clean_csv_carrefour():
 
         name = name.replace(',', '.')
         name = name.replace(';', ' ')
+        name = name.replace('-', ' ')
 
-        file2.write(name.lower() + separator + dep + "\n")
+        file2.write(name + separator + dep + "\n")
     file.close()
 
 
@@ -62,43 +64,47 @@ def create_new_csv(f_stop_words, file_csv, var1, var2, new_file_name):
     for data in data_1:
         text_tokens = nltk.tokenize.word_tokenize(data)
         # print(text_tokens)
-        name_product = [contains_car(word) for word in text_tokens if not word in words
+        name_product = [contains_car(word) for word in text_tokens if not word.lower() in words
                         and contains_car(word) is not None]
         # print(name_product)
         results.append(" ".join(name_product))
 
     file = open(new_file_name, 'w', encoding="utf-8")
+    file_2 = open(file_destination_2, 'w', encoding='utf-8')
     file.write(name_products + separator + dep_products + "\n")
+    file_2.write(name_products + separator + dep_products + "\n")
     for words, labels in zip(results, data_2):
         val = str(words) + separator + str(labels) + "\n"
         file.write(val)
+        file_2.write(val.lower())
     file.close()
+    file_2.close()
 
 
-def contains_car(words):
-    test_grammes = re.search("[0-9]*k?gr?$", words)
-    test_litres = re.search("^[0-9]+c?l$", words)
-    test_temps = re.search("^[0-9]+[m|n]+$", words)
-    test_mesure = re.search("[0-9]+[c|d|m²]+$", words)
-    test_mesure_2 = re.search("gr/m", words)
-    test_number = re.search("[0-9]+", words)
-    test_car = re.search("^[a-z Ü-ü]$", words)
-    test_car_2 = re.search("^[l'][d']", words)
-    test_car_3 = re.search("^[a-z Ü-ü -]*$", words)
-    test_car_4 = re.search("^-*$", words)
+def contains_car(word):
+    test_grammes = re.search("[0-9]+[mk]?gr?", word.lower())
+    test_grammes_2 = re.search("^(mg|g|gr)$", word.lower())
+    test_litres = re.search("^[0-9]+.?[0-9]*[mcd]?l", word.lower())
+    test_litres_2 = re.search("^(ml|cl|dl|l)$", word.lower())
+    test_mesure = re.search("[cdm]²$", word.lower())
+    test_mesure_2 = re.search("gr/m", word.lower())
+    test_number = re.search("[0-9]+", word.lower())
+    test_car = re.search("^.$", word.lower())
+    test_car_2 = re.search("^(l'|d)", word.lower())
+    test_car_3 = re.search("^-*$", word.lower())
+    test_absence_carre = re.search("²", word.lower())
+    test_alpha_num = re.search("^[a-z]$", word.lower())
 
-    if test_grammes:
+    if (test_grammes or test_grammes_2) and test_absence_carre is None:
         return "grammes"
-    elif test_litres:
+    elif (test_litres or test_litres_2) and test_absence_carre is None:
         return "litres"
-    elif test_temps:
-        return "temps"
     elif test_mesure or test_mesure_2:
-        return "mesure"
+        return "/mesure/"
     elif test_car_2:
-        return words[2:]
-    elif test_number is None and test_car is None and test_car_3 is not None and test_car_4 is None:
-        return words
+        return word[2:]
+    elif test_alpha_num and test_car is None:
+        return word
 
 
 def write_words_nltk():
@@ -107,13 +113,6 @@ def write_words_nltk():
 
     file = open(file_stop_words, 'w')
     for words in stopwords.words('french'):
-        file.write(words + "\n")
-    file.close()
-
-
-def write_words_spacy():
-    file = open("data/stop_words_spacy.txt", 'w')
-    for words in fr_stop:
         file.write(words + "\n")
     file.close()
 

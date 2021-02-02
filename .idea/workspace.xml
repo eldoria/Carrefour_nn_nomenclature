@@ -2,43 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f0ae239-d3ff-4697-9a9e-9b4ec64d6418" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/bestModel.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cleaning_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/carrefour_products.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/produits_carrefour_nomenclatures_cleaned_1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/stop_words_nltk.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/stop_words_spacy.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_1024_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_1024_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_2048_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_2048_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_512_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_0_512_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_1024_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_1024_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_2048_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_2048_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_512_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_1_512_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_1024_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_1024_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_1512_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_1512_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_2048_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_2_2048_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_1024_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_1024_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_1512_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_1512_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_2048_accuracy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/plot_3_2048_loss.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/checkpoint" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt.data-00000-of-00001" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt.index" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebook nomenclature produits carrefour.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebook nomenclature produits carrefour.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/algo_tokenizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/produits_carrefour_nomenclatures.csv" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/testRegex.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bestModel.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bestModel.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cleaning_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/cleaning_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +46,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/images" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -168,7 +143,9 @@
       <workItem from="1611758734535" duration="4166000" />
       <workItem from="1611822236299" duration="308000" />
       <workItem from="1611822766726" duration="160000" />
-      <workItem from="1611822939410" duration="3068000" />
+      <workItem from="1611822939410" duration="7146000" />
+      <workItem from="1612172732346" duration="13223000" />
+      <workItem from="1612252395519" duration="6248000" />
     </task>
     <servers />
   </component>
@@ -181,7 +158,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/NLP$algo_tokenizer.coverage" NAME="algo_tokenizer Coverage Results" MODIFIED="1610718244432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NLP$train_model__1_.coverage" NAME="train_model Coverage Results" MODIFIED="1611571783952" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NLP$cleaning_data.coverage" NAME="cleaning_data Coverage Results" MODIFIED="1611829358954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NLP$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1611823414211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP$cleaning_data.coverage" NAME="cleaning_data Coverage Results" MODIFIED="1612258860285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP$train_model.coverage" NAME="train_model Coverage Results" MODIFIED="1612257750680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
