@@ -90,10 +90,10 @@ def contains_car(word):
     test_mesure_2 = re.search("gr/m", word.lower())
     test_number = re.search("[0-9]+", word.lower())
     test_car = re.search("^.$", word.lower())
-    test_car_2 = re.search("^(l'|d)", word.lower())
+    test_car_2 = re.search("^(l'|d')", word.lower())
     test_car_3 = re.search("^-*$", word.lower())
     test_absence_carre = re.search("²", word.lower())
-    test_alpha_num = re.search("^[a-z]$", word.lower())
+    test_alpha_num = re.search("^[a-z]+$", word.lower())
 
     if (test_grammes or test_grammes_2) and test_absence_carre is None:
         return "grammes"

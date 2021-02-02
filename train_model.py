@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import re
 from sklearn.model_selection import train_test_split
 
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -169,14 +170,14 @@ def get_data(f, repartition):
 
 def neural_network(size_y, batch_size, nb_words):
     model = keras.Sequential([
-        Embedding(nb_words + 1, 20, input_length=nb_size_max),
+        Embedding(nb_words + 1, 200, input_length=nb_size_max),
         LayerNormalization(),
-        Dropout(0.40),
-        GRU(64, dropout=dropout, return_sequences=True),
+        Dropout(0.4),
+        LSTM(64, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        GRU(32, dropout=dropout, return_sequences=True),
+        LSTM(32, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        GRU(16, dropout=dropout),
+        LSTM(16, dropout=dropout),
         LayerNormalization(),
         Dense(64),
         LayerNormalization(),
@@ -190,18 +191,20 @@ def neural_network(size_y, batch_size, nb_words):
                   loss=keras.losses.categorical_crossentropy,
                   metrics=[keras.metrics.categorical_accuracy])
 
-    # model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="training/weigths.ckpt", save_weights_only=True,
-    #                                                  save_best_only=True, monitor="val_categorical_accuracy", verbose=1)
+    model.save("./training/model.h5")
+
+    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="training/weigths.ckpt", save_weights_only=True,
+                                                     save_best_only=True, monitor="val_categorical_accuracy", verbose=1)
 
     logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=150, validation_data=(x_test, y_test)
-                     , callbacks=[keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy', patience=15)],
-                     verbose=2)
+                     , callbacks=[keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy', patience=15),
+                                  model_saver], verbose=2)
 
     return logs
 
 
 if __name__ == "__main__":
-    name_file = "data/carrefour_products_cleaned_maj.csv"
+    name_file = "data/carrefour_products_cleaned_min.csv"
     x_train, x_test, y_train, y_test, size_y, nb_words = get_data(name_file, 0.2)
 
     for bt_s in batch_size:

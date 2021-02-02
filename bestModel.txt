@@ -1,10 +1,10 @@
 GRU
 
-90.33 %
-best accuracy : 92.59 % -> produits_carrefour_nomenclatures_2 avec mots en majuscules
-dropout=0.23
+best accuracy : 91.01 %
+dropout=0.25
 
-Embedding(nb_words + 1, 200, input_length=nb_size_max),
+model = keras.Sequential([
+        Embedding(nb_words + 1, 200, input_length=nb_size_max),
         LayerNormalization(),
         Dropout(0.4),
         GRU(64, dropout=dropout, return_sequences=True),
@@ -17,23 +17,4 @@ Embedding(nb_words + 1, 200, input_length=nb_size_max),
         LayerNormalization(),
         Dense(48),
         Dense(size_y, activation=keras.activations.softmax)
-
-
-
-LSTM :
-
-best accuracy : 89.33 %
-
-batch_size = 2048
-
-Embedding(nb_words + 1, 256, input_length=max_size_word),
-LSTM(64, dropout=0.2, return_sequences=True),
-LayerNormalization(),
-LSTM(32, dropout=0.2, return_sequences=True),
-LayerNormalization(),
-LSTM(16, dropout=0.2),
-LayerNormalization(),
-Dense(96),
-LayerNormalization(),
-Dense(64),
-Dense(size_y, activation=keras.activations.softmax)
+    ])
