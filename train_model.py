@@ -30,20 +30,20 @@ tokenizer = Tokenizer(num_words=28200, oov_token="<OOV>")
 def plot_log(all_logs):
     for logs in all_logs:
         losses = logs.history['loss']
-        name = logs.history['name'] + " - training"
+        name = logs.history['name'] + " - model"
         plt.plot(list(range(len(losses))), losses, label=name)
         losses = logs.history['val_loss']
         name = logs.history['name'] + " - testing"
         plt.plot(list(range(len(losses))), losses, label=name)
     plt.xlabel("number of epochs")
     plt.ylabel("error")
-    plt.title("error on training/testing")
+    plt.title("error on model/testing")
     plt.legend()
     plt.show()
 
     for logs in all_logs:
         metric = logs.history['sparse_categorical_accuracy']
-        name = logs.history['name'] + " - training"
+        name = logs.history['name'] + " - model"
         plt.plot(list(range(len(metric))), metric, label=name)
         metric = logs.history['val_sparse_categorical_accuracy']
         name = logs.history['name'] + " - testing"
@@ -51,7 +51,7 @@ def plot_log(all_logs):
     plt.xlabel("number of epochs")
     plt.ylabel("accuracy")
     plt.legend()
-    plt.title("prediction accuracy on training/testing")
+    plt.title("prediction accuracy on model/testing")
     plt.show()
 
 
@@ -79,7 +79,7 @@ def auto_encoder_y(label_name):
     result = []
     words = {possibilities[i]: i for i in range(size)}
 
-    mpu.io.write('./training/dict_categories.pickle', words)
+    mpu.io.write('model/dict_categories.pickle', words)
 
     for l in label_name:
         result.append(words[l])
@@ -198,9 +198,9 @@ def neural_network(size_y, batch_size, nb_words):
                   loss=keras.losses.sparse_categorical_crossentropy,
                   metrics=[keras.metrics.sparse_categorical_accuracy])
 
-    # model.save("./training/model.h5") -> ne pas faire sinon pb shape embeddings
+    # model.save("./model/model.h5") -> ne pas faire sinon pb shape embeddings
 
-    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="training/weigths.ckpt", save_weights_only=True,
+    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="model/weigths.ckpt", save_weights_only=True,
                                                      save_best_only=True, monitor="val_sparse_categorical_accuracy",
                                                      verbose=1)
 
@@ -221,8 +221,8 @@ def neural_network(size_y, batch_size, nb_words):
         embedding_weights[word] = embeddings[index]
     print(len(embedding_weights))
     '''
-    mpu.io.write('./training/embeddings.pickle', embeddings)
-    mpu.io.write('./training/word_index.pickle', tokenizer.word_index)
+    mpu.io.write('model/embeddings.pickle', embeddings)
+    mpu.io.write('model/word_index.pickle', tokenizer.word_index)
 
     return logs
 

@@ -6,3 +6,6 @@ file_data_name = "carrefour_products.csv"
 
 columnData = ""
 columnToPredict = ""
+separator = ""
+nb_size_min = ?
+nb_size_max = ?

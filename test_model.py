@@ -1,5 +1,4 @@
 from train_model import *
-from tensorflow.keras.models import load_model
 
 file_data = "./data/carrefour_products_cleaned_min.csv"
 separator = '$'
@@ -72,13 +71,13 @@ def from_data_to_values(var1, var2, dict_words, dict_categories):
 
 
 def neural_network_feed_forward(var1, var2):
-    embeddings = mpu.io.read('./training/embeddings.pickle')
-    dict_categories = mpu.io.read('./training/dict_categories.pickle')
-    dict_words = mpu.io.read('./training/word_index.pickle')
+    embeddings = mpu.io.read('model/embeddings.pickle')
+    dict_categories = mpu.io.read('model/dict_categories.pickle')
+    dict_words = mpu.io.read('model/word_index.pickle')
 
     model = get_model(len(dict_words), embeddings, len(dict_categories))
     # model = create_model(len(dict_categories), len(embeddings))
-    model.load_weights("training/weigths.ckpt")
+    model.load_weights("model/weigths.ckpt")
     model.summary()
 
     x, y = from_data_to_values(var1, var2, dict_words, dict_categories)
