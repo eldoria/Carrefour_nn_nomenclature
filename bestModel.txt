@@ -1,7 +1,25 @@
 GRU
 
-best accuracy : 91.01 %
-dropout=0.25
+best accuracy :
+(nombres de lignes : 56 032)
+avec tous les mots : 88,28 %
+aves mots de taille 1 supprimés : 89,51 %, nombres de lignes = - 1098
+avec mots de taille 2 supprimés : 90,60 %, nombres de lignes : - 4052
+avec mots de taille 3 supprimés : 91,81 %, nombre de lignes = - 10 800
+
+NB : les % sont amenés à changer selon les runs
+Quel solution choisir ?
+
+On a une amélioration de la prédiction d'un peu près 1.23 % quand on supprime les mots
+de taille 1 soit un peu près 1100 mots
+(1098 / 56 032) x 100 = 1,96 % des mots sont de taille 1
+1,96 % de mots en moins -> augmente 1.23 % l'accuracy -> ? % mots taille 1 mal classés
+
+On a une amélioration de la prédiction d'un peu près 1,09 % quand on supprime les mots
+de taille 2 soit un peu près 4052 mots
+(4052 / 56 032) x 100 = 7.23 % des mots sont de taille 2 ou moins
+7.23 % de mots en moins -> augmente 1.09 % l'accuracy -> ? % mots taille 1 mal classés
+
 
 model = keras.Sequential([
         Embedding(nb_words + 1, 200, input_length=nb_size_max),
@@ -18,3 +36,8 @@ model = keras.Sequential([
         Dense(48),
         Dense(size_y, activation=keras.activations.softmax)
     ])
+
+ref_batch_size = 4096.0
+ref_lr = 0.0009
+batch_size = 2048
+dropout = 0.25

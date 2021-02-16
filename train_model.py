@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
+import mpu
 from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
@@ -15,12 +16,15 @@ dep_products = "hypDepartmentDesc"
 
 ref_batch_size = 4096.0
 ref_lr = 0.0009
-batch_size = [2048]
+batch_size = 2048
 dropout = 0.25
 
 
-nb_size_min = 2
-nb_size_max = 20
+nb_size_min = 3
+nb_size_max = 16
+
+# 28 200 mots maximum à garder et remplace les mots inconnus avec le token out-of-value
+tokenizer = Tokenizer(num_words=28200, oov_token="<OOV>")
 
 
 def plot_log(all_logs):
@@ -38,10 +42,10 @@ def plot_log(all_logs):
     plt.show()
 
     for logs in all_logs:
-        metric = logs.history['categorical_accuracy']
+        metric = logs.history['sparse_categorical_accuracy']
         name = logs.history['name'] + " - training"
         plt.plot(list(range(len(metric))), metric, label=name)
-        metric = logs.history['val_categorical_accuracy']
+        metric = logs.history['val_sparse_categorical_accuracy']
         name = logs.history['name'] + " - testing"
         plt.plot(list(range(len(metric))), metric, label=name)
     plt.xlabel("number of epochs")
@@ -52,9 +56,6 @@ def plot_log(all_logs):
 
 
 def auto_encoder_x(training_data, testing_data):
-    # 20 000 mots maximum à garder et remplace les mots inconnus avec le token out-of-value
-    tokenizer = Tokenizer(num_words=28200, oov_token="<OOV>")
-
     # Crée le dictionnaire
     tokenizer.fit_on_texts(training_data)
 
@@ -71,10 +72,6 @@ def auto_encoder_x(training_data, testing_data):
     return padded_training, padded_testing, len(tokenizer.word_index)
 
 
-def number_to_binary(number, size):
-    return [0 if i != number else 1 for i in range(size)]
-
-
 def auto_encoder_y(label_name):
     possibilities = label_name.unique()
     size = possibilities.shape[0]
@@ -82,10 +79,10 @@ def auto_encoder_y(label_name):
     result = []
     words = {possibilities[i]: i for i in range(size)}
 
+    mpu.io.write('./training/dict_categories.pickle', words)
+
     for l in label_name:
-        nb = words[l]
-        val = number_to_binary(nb, size)
-        result.append(val)
+        result.append(words[l])
 
     return result
 
@@ -129,6 +126,10 @@ def eliminate_too_short_names_of_products(data_x, data_y, n):
     return result_x, result_y
 
 
+def get_nb_categories(y):
+    return y.nunique()
+
+
 def get_data(f, repartition):
     products = pd.read_csv(f, sep='$')
     products = products.astype(str)
@@ -142,11 +143,11 @@ def get_data(f, repartition):
 
     print("nombre de données après la supression de doublons : " + str(len(x)))
 
-    print("avant supression des mots de taille " + str(nb_size_min) + " : " + str(len(x)))
+    print("avant supression des mots de taille " + str(nb_size_min - 1) + " : " + str(len(x)))
 
-    x, y = eliminate_too_short_names_of_products(x, y, nb_size_min)
+    x, y = eliminate_too_short_names_of_products(x, y, nb_size_min - 1)
 
-    print("après supression des mots de taille " + str(nb_size_min) + " : " + str(len(x)))
+    print("après supression des mots de taille " + str(nb_size_min - 1) + " : " + str(len(x)))
 
     get_max_size_words(x)
 
@@ -168,37 +169,60 @@ def get_data(f, repartition):
     return x_tr, x_te, y_tr, y_te, size_y, nb_words
 
 
-def neural_network(size_y, batch_size, nb_words):
+def create_model(size_y, nb_words):
+    print(nb_words)
     model = keras.Sequential([
-        Embedding(nb_words + 1, 200, input_length=nb_size_max),
+        Embedding(input_dim=nb_words+1, output_dim=200, input_length=nb_size_max, name='embeddings'),
         LayerNormalization(),
         Dropout(0.4),
-        LSTM(64, dropout=dropout, return_sequences=True),
+        GRU(64, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        LSTM(32, dropout=dropout, return_sequences=True),
+        GRU(32, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        LSTM(16, dropout=dropout),
+        GRU(16, dropout=dropout),
         LayerNormalization(),
         Dense(64),
         LayerNormalization(),
         Dense(48),
         Dense(size_y, activation=keras.activations.softmax)
     ])
+    return model
+
+
+def neural_network(size_y, batch_size, nb_words):
+    model = create_model(size_y, nb_words)
 
     model.summary()
 
-    model.compile(optimizer=keras.optimizers.Adam(lr=ref_lr / ref_batch_size * bt_s),
-                  loss=keras.losses.categorical_crossentropy,
-                  metrics=[keras.metrics.categorical_accuracy])
+    model.compile(optimizer=keras.optimizers.Adam(lr=ref_lr / ref_batch_size * batch_size),
+                  loss=keras.losses.sparse_categorical_crossentropy,
+                  metrics=[keras.metrics.sparse_categorical_accuracy])
 
-    model.save("./training/model.h5")
+    # model.save("./training/model.h5") -> ne pas faire sinon pb shape embeddings
 
     model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="training/weigths.ckpt", save_weights_only=True,
-                                                     save_best_only=True, monitor="val_categorical_accuracy", verbose=1)
+                                                     save_best_only=True, monitor="val_sparse_categorical_accuracy",
+                                                     verbose=1)
 
-    logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=150, validation_data=(x_test, y_test)
-                     , callbacks=[keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy', patience=15),
+    logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=100, validation_data=(x_test, y_test)
+                     , callbacks=[keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=15),
                                   model_saver], verbose=2)
+
+    embeddings = model.get_layer('embeddings').get_weights()[0]
+    '''
+    print(embeddings)
+    exit()
+    print(embeddings.shape)
+    print(len(tokenizer.word_index))
+
+    embedding_weights = {}
+
+    for word, index in tokenizer.word_index.items():
+        embedding_weights[word] = embeddings[index]
+    print(len(embedding_weights))
+    '''
+    mpu.io.write('./training/embeddings.pickle', embeddings)
+    mpu.io.write('./training/word_index.pickle', tokenizer.word_index)
 
     return logs
 
@@ -207,15 +231,12 @@ if __name__ == "__main__":
     name_file = "data/carrefour_products_cleaned_min.csv"
     x_train, x_test, y_train, y_test, size_y, nb_words = get_data(name_file, 0.2)
 
-    for bt_s in batch_size:
-        lr = ref_lr / ref_batch_size * bt_s
+    all_logs = []
 
-        all_logs = []
+    logs = neural_network(size_y, batch_size, nb_words)
 
-        logs = neural_network(size_y, bt_s, nb_words)
+    logs.history['name'] = "LSTM - size_min_mot : " + str(nb_size_min) + " - nb_max : " + str(nb_size_max)
 
-        logs.history['name'] = "LSTM - size_min_mot : " + str(nb_size_min) + " - batch_size : " + str(bt_s)
+    all_logs.append(logs)
 
-        all_logs.append(logs)
-
-        plot_log(all_logs)
+    plot_log(all_logs)
