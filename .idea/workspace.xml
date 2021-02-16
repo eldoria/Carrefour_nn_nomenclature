@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f0ae239-d3ff-4697-9a9e-9b4ec64d6418" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/dict_categories.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/embeddings.pickle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt_temp_9e917645ea984e04bbfee8a45600494e/part-00000-of-00001.data-00000-of-00001.tempstate17247835546118208798" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/weigths.ckpt_temp_bf425e686e2b4f06bfc62a120a01e466/part-00000-of-00001.index" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/training/word_index.pickle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestModel.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bestModel.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/model.h5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/weigths.ckpt.data-00000-of-00001" beforeDir="false" afterPath="$PROJECT_DIR$/training/weigths.ckpt.data-00000-of-00001" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/training/weigths.ckpt.index" beforeDir="false" afterPath="$PROJECT_DIR$/training/weigths.ckpt.index" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +193,7 @@
       <workItem from="1612426159014" duration="20410000" />
       <workItem from="1613315878827" duration="9287000" />
       <workItem from="1613382394248" duration="18450000" />
-      <workItem from="1613464033407" duration="4811000" />
+      <workItem from="1613464033407" duration="5681000" />
     </task>
     <servers />
   </component>
