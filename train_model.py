@@ -1,30 +1,32 @@
+from define_parameters import *
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import re
 import mpu
 from sklearn.model_selection import train_test_split
-
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import LSTM, Dense, Embedding, LayerNormalization, GRU, Dropout
+from tensorflow.keras.layers import Dense, Embedding, LayerNormalization, GRU, Dropout
 
-name_products = "articleShortTitle"
-dep_products = "hypDepartmentDesc"
+name_products = training_columnData
+cat_products = training_columnToPredict
 
 ref_batch_size = 4096.0
 ref_lr = 0.0009
 batch_size = 2048
 dropout = 0.25
 
+nb_size_min = nb_size_min
+nb_size_max = nb_size_max
 
-nb_size_min = 3
-nb_size_max = 16
+file_for_training = name_folder_data + training_folder + "/" + training_cleanedFile
 
 # 28 200 mots maximum à garder et remplace les mots inconnus avec le token out-of-value
-tokenizer = Tokenizer(num_words=28200, oov_token="<OOV>")
+tokenizer = Tokenizer(num_words=20000, oov_token="<OOV>")
 
 
 def plot_log(all_logs):
@@ -77,12 +79,12 @@ def auto_encoder_y(label_name):
     size = possibilities.shape[0]
 
     result = []
-    words = {possibilities[i]: i for i in range(size)}
-
-    mpu.io.write('model/dict_categories.pickle', words)
+    categories = {possibilities[i]: i for i in range(size)}
+    print(categories)
+    mpu.io.write('model/Carrefour/dict_categories.pickle', categories)
 
     for l in label_name:
-        result.append(words[l])
+        result.append(categories[l])
 
     return result
 
@@ -92,12 +94,13 @@ def delete_duplicate(x, y):
 
     df.drop_duplicates(subset=name_products, keep="first", inplace=True)
 
-    return df[name_products], df[dep_products]
+    return df[name_products], df[cat_products]
 
 
 def get_max_size_words(values):
     expr = re.compile("\W+", re.U)
     max_size_word = 0
+    print("TEST")
     for value in values:
         l = expr.split(value)
         if len(l) > max_size_word:
@@ -106,15 +109,14 @@ def get_max_size_words(values):
 
 
 def eliminate_too_short_names_of_products(data_x, data_y, n):
-    if n == 0:
-        return data_x, data_y
-
     result_x = []
     result_y = []
 
     for line_x, line_y in zip(data_x, data_y):
         line_x = line_x.split(" ")
         size = len(line_x)
+        if size == 0:
+            print("test")
         if size > n:
             line_x = " ".join(line_x)
             result_x.append(line_x)
@@ -135,7 +137,7 @@ def get_data(f, repartition):
     products = products.astype(str)
 
     x = products[name_products]  # récupérer le nom des produits
-    y = products[dep_products]  # récupérer le nom des rayons
+    y = products[cat_products]  # récupérer le nom des rayons
 
     print("nombre de données avant la supression des doublons : " + str(len(x)))
 
@@ -150,7 +152,6 @@ def get_data(f, repartition):
     print("après supression des mots de taille " + str(nb_size_min - 1) + " : " + str(len(x)))
 
     get_max_size_words(x)
-
 
     size_y = y.nunique()
     print("nombre de catégories : " + str(size_y))
@@ -170,16 +171,16 @@ def get_data(f, repartition):
 
 
 def create_model(size_y, nb_words):
-    print(nb_words)
     model = keras.Sequential([
-        Embedding(input_dim=nb_words+1, output_dim=200, input_length=nb_size_max, name='embeddings'),
+        Embedding(input_dim=nb_words+1, output_dim=200, input_length=nb_size_max,
+                  name='embeddings'),
         LayerNormalization(),
         Dropout(0.4),
-        GRU(64, dropout=dropout, return_sequences=True),
+        GRU(64, dropout=dropout, return_sequences=True, activation=keras.activations.relu),
         LayerNormalization(),
-        GRU(32, dropout=dropout, return_sequences=True),
+        GRU(32, dropout=dropout, return_sequences=True, activation=keras.activations.relu),
         LayerNormalization(),
-        GRU(16, dropout=dropout),
+        GRU(16, dropout=dropout, activation=keras.activations.relu),
         LayerNormalization(),
         Dense(64),
         LayerNormalization(),
@@ -189,7 +190,7 @@ def create_model(size_y, nb_words):
     return model
 
 
-def neural_network(size_y, batch_size, nb_words):
+def neural_network(size_y, nb_words, x_train, x_test, y_train, y_test):
     model = create_model(size_y, nb_words)
 
     model.summary()
@@ -200,43 +201,42 @@ def neural_network(size_y, batch_size, nb_words):
 
     # model.save("./model/model.h5") -> ne pas faire sinon pb shape embeddings
 
-    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="model/weigths.ckpt", save_weights_only=True,
+    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="model/Carrefour/weigths.ckpt", save_weights_only=True,
                                                      save_best_only=True, monitor="val_sparse_categorical_accuracy",
                                                      verbose=1)
 
-    logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=100, validation_data=(x_test, y_test)
-                     , callbacks=[keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=15),
-                                  model_saver], verbose=2)
+    logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=100, validation_data=(x_test, y_test),
+                     callbacks=[keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=15),
+                                model_saver], verbose=2)
 
-    embeddings = model.get_layer('embeddings').get_weights()[0]
-    '''
-    print(embeddings)
-    exit()
-    print(embeddings.shape)
-    print(len(tokenizer.word_index))
+    mpu.io.write('model/Carrefour/word_index.pickle', tokenizer.word_index)
 
-    embedding_weights = {}
-
-    for word, index in tokenizer.word_index.items():
-        embedding_weights[word] = embeddings[index]
-    print(len(embedding_weights))
-    '''
-    mpu.io.write('model/embeddings.pickle', embeddings)
-    mpu.io.write('model/word_index.pickle', tokenizer.word_index)
+    score_test = model.evaluate(x_test, y_test, verbose=0)
+    print(score_test)
+    score_train = model.evaluate(x_train, y_train, verbose=0)
+    print(score_train)
+    score_total = score_train[1] * 0.8 + score_test[1] * 0.2
+    print("/////////////////")
+    print(score_total)
 
     return logs
 
 
-if __name__ == "__main__":
-    name_file = "data/carrefour_products_cleaned_min.csv"
-    x_train, x_test, y_train, y_test, size_y, nb_words = get_data(name_file, 0.2)
+def train_model():
+    x_train, x_test, y_train, y_test, size_y, nb_words = get_data(file_for_training, 0.2)
+
+    exit()
 
     all_logs = []
 
-    logs = neural_network(size_y, batch_size, nb_words)
+    logs = neural_network(size_y, nb_words, x_train, x_test, y_train, y_test)
 
     logs.history['name'] = "LSTM - size_min_mot : " + str(nb_size_min) + " - nb_max : " + str(nb_size_max)
 
     all_logs.append(logs)
 
     plot_log(all_logs)
+
+
+if __name__ == "__main__":
+    train_model()

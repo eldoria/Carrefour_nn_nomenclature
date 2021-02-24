@@ -1,10 +1,10 @@
 GRU
 
 best accuracy :
-(nombres de lignes : 56 032)
+(nombres de lignes : 56 021)
 avec tous les mots : 88,28 %
 aves mots de taille 1 supprimés : 89,51 %, nombres de lignes = - 1098
-avec mots de taille 2 supprimés : 90,60 %, nombres de lignes : - 4052
+avec mots de taille 2 supprimés : 91.25 %, nombres de lignes : - 4052
 avec mots de taille 3 supprimés : 91,81 %, nombre de lignes = - 10 800
 
 NB : les % sont amenés à changer selon les runs
@@ -12,7 +12,7 @@ Quel solution choisir ?
 
 On a une amélioration de la prédiction d'un peu près 1.23 % quand on supprime les mots
 de taille 1 soit un peu près 1100 mots
-(1098 / 56 032) x 100 = 1,96 % des mots sont de taille 1
+(1098 / 56 021) x 100 = 1,96 % des mots sont de taille 1
 1,96 % de mots en moins -> augmente 1.23 % l'accuracy -> ? % mots taille 1 mal classés
 
 On a une amélioration de la prédiction d'un peu près 1,09 % quand on supprime les mots
@@ -21,8 +21,10 @@ de taille 2 soit un peu près 4052 mots
 7.23 % de mots en moins -> augmente 1.09 % l'accuracy -> ? % mots taille 1 mal classés
 
 
+
+
 model = keras.Sequential([
-        Embedding(nb_words + 1, 200, input_length=nb_size_max),
+        Embedding(nb_words + 1, 200, input_length=nb_size_max), # , embeddings_regularizer=keras.regularizers.l1_l2(l1=1e-4, l2=1e-3)
         LayerNormalization(),
         Dropout(0.4),
         GRU(64, dropout=dropout, return_sequences=True),
@@ -41,3 +43,371 @@ ref_batch_size = 4096.0
 ref_lr = 0.0009
 batch_size = 2048
 dropout = 0.25
+
+
+////////////////////////////////////////////////////
+
+On garde les prédictions supérieures ou égales à : 0
+Détail des erreurs :
+p.l.s.                     254
+epicerie                   207
+charcut.traiteur           138
+parfumerie hygiene          91
+parapharmacie               83
+fruits et legumes           58
+boissons                    53
+jouet sport                 51
+pem                         48
+confort de la maison        42
+bricolage                   34
+jeux video et logiciels     33
+gem                         24
+jardin et animalerie        21
+boucherie volaille          20
+droguerie                   19
+poissonnerie                16
+boulangerie/patisserie      10
+bebe                        10
+photo communication          8
+auto                         8
+micro informatique           6
+radiotelephonie              6
+librairie                    5
+image et son                 5
+linge de maison              5
+papeterie                    4
+musique                      1
+Name: self, dtype: int64
+nombre de lignes : 59498
+accuracy : 97.88228175737%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.5
+Détail des erreurs :
+p.l.s.                     244
+epicerie                   196
+charcut.traiteur           131
+parfumerie hygiene          90
+parapharmacie               78
+fruits et legumes           57
+boissons                    50
+jouet sport                 48
+pem                         47
+confort de la maison        39
+bricolage                   33
+jeux video et logiciels     31
+gem                         21
+boucherie volaille          19
+droguerie                   17
+jardin et animalerie        16
+poissonnerie                14
+bebe                        10
+boulangerie/patisserie       9
+auto                         7
+photo communication          7
+micro informatique           6
+radiotelephonie              6
+linge de maison              5
+librairie                    4
+papeterie                    4
+image et son                 4
+Name: self, dtype: int64
+nombre de lignes : 59403
+accuracy : 97.99168392168745%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.6
+Détail des erreurs :
+p.l.s.                     208
+epicerie                   173
+charcut.traiteur           118
+parfumerie hygiene          82
+parapharmacie               70
+fruits et legumes           55
+boissons                    45
+jouet sport                 41
+pem                         36
+confort de la maison        36
+jeux video et logiciels     31
+bricolage                   31
+gem                         21
+boucherie volaille          19
+poissonnerie                14
+jardin et animalerie        14
+droguerie                   13
+boulangerie/patisserie       9
+bebe                         9
+photo communication          7
+micro informatique           6
+auto                         6
+radiotelephonie              6
+linge de maison              5
+librairie                    4
+papeterie                    4
+image et son                 4
+Name: self, dtype: int64
+nombre de lignes : 59162
+accuracy : 98.19647746864541%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.7
+Détail des erreurs :
+p.l.s.                     187
+epicerie                   148
+charcut.traiteur           110
+parfumerie hygiene          73
+parapharmacie               63
+fruits et legumes           53
+boissons                    41
+jouet sport                 38
+confort de la maison        35
+pem                         32
+jeux video et logiciels     31
+bricolage                   25
+gem                         21
+boucherie volaille          19
+jardin et animalerie        14
+droguerie                   11
+poissonnerie                10
+bebe                         8
+boulangerie/patisserie       7
+photo communication          6
+micro informatique           5
+linge de maison              5
+auto                         4
+librairie                    4
+image et son                 4
+radiotelephonie              4
+papeterie                    3
+Name: self, dtype: int64
+nombre de lignes : 58897
+accuracy : 98.36833794590557%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.8
+Détail des erreurs :
+p.l.s.                     154
+epicerie                   122
+charcut.traiteur            98
+parfumerie hygiene          60
+parapharmacie               55
+fruits et legumes           44
+boissons                    36
+jouet sport                 35
+confort de la maison        35
+jeux video et logiciels     31
+pem                         30
+bricolage                   21
+gem                         20
+boucherie volaille          16
+jardin et animalerie        13
+poissonnerie                 9
+droguerie                    9
+boulangerie/patisserie       7
+bebe                         7
+photo communication          6
+micro informatique           5
+linge de maison              5
+auto                         4
+radiotelephonie              4
+librairie                    3
+papeterie                    3
+image et son                 3
+Name: self, dtype: int64
+nombre de lignes : 58564
+accuracy : 98.57420941192541%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.9
+Détail des erreurs :
+p.l.s.                     116
+epicerie                   100
+charcut.traiteur            78
+parfumerie hygiene          44
+parapharmacie               41
+fruits et legumes           38
+jouet sport                 31
+confort de la maison        29
+boissons                    23
+pem                         22
+gem                         20
+bricolage                   18
+boucherie volaille          15
+jardin et animalerie        11
+poissonnerie                 7
+droguerie                    7
+bebe                         7
+jeux video et logiciels      6
+boulangerie/patisserie       5
+micro informatique           5
+auto                         4
+photo communication          4
+image et son                 3
+radiotelephonie              3
+papeterie                    3
+librairie                    2
+Name: self, dtype: int64
+nombre de lignes : 57946
+accuracy : 98.89207192903739%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.95
+Détail des erreurs :
+p.l.s.                     90
+epicerie                   86
+charcut.traiteur           65
+parapharmacie              38
+parfumerie hygiene         35
+fruits et legumes          30
+jouet sport                27
+confort de la maison       26
+pem                        20
+gem                        18
+boissons                   17
+boucherie volaille         14
+bricolage                  12
+jardin et animalerie       10
+micro informatique          5
+poissonnerie                5
+droguerie                   5
+boulangerie/patisserie      5
+jeux video et logiciels     5
+bebe                        4
+auto                        4
+image et son                2
+librairie                   2
+papeterie                   2
+photo communication         2
+radiotelephonie             1
+Name: self, dtype: int64
+nombre de lignes : 57289
+accuracy : 99.07486603012795%
+//////////////////////////////////
+
+Causes d'erreurs principales :
+-> p.l.s
+-> epicerie
+-> charcuterie.traiteur
+
+
+
+
+
+
+
+On garde les prédictions supérieures ou égales à : 0
+Détail des erreurs :
+desserts, aide patisserie, die    457
+conserves et plats cuisines       148
+potages, pates, feculents & au    120
+traiteur                          118
+soins                             118
+                                 ...
+livre pratique                      1
+luminaire                           1
+boulangerie                         1
+congelateur                         1
+equipement et deco auto             1
+Name: self, Length: 135, dtype: int64
+nombre de lignes : 59329
+accuracy : 94.65859866170001%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.5
+Détail des erreurs :
+desserts, aide patisserie, die    406
+potages, pates, feculents & au    115
+conserves et plats cuisines       113
+soins                             108
+traiteur l.s coupe                 86
+                                 ...
+boucherie a la coupe                1
+legumes                             1
+veau et porc                        1
+peripherique infomatique            1
+cycle et accessoires                1
+Name: self, Length: 114, dtype: int64
+nombre de lignes : 58298
+accuracy : 95.7562866650657%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.6
+Détail des erreurs :
+desserts, aide patisserie, die    344
+potages, pates, feculents & au    107
+conserves et plats cuisines        93
+soins                              89
+hygiene toilette                   64
+                                 ...
+mobilier de jardin                  1
+outillage electro accessoires       1
+video                               1
+veau et porc                        1
+consommable impression              1
+Name: self, Length: 106, dtype: int64
+nombre de lignes : 57369
+accuracy : 96.46847600620544%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.7
+Détail des erreurs :
+desserts, aide patisserie, die    276
+potages, pates, feculents & au     86
+conserves et plats cuisines        71
+soins                              65
+traiteur                           50
+                                 ...
+patisseries                         1
+gestion du rayon charcuterie        1
+materiel informatique               1
+entretien                           1
+outillage electro accessoires       1
+Name: self, Length: 103, dtype: int64
+nombre de lignes : 56295
+accuracy : 97.16848743227641%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.8
+Détail des erreurs :
+desserts, aide patisserie, die    207
+potages, pates, feculents & au     70
+conserves et plats cuisines        54
+parfumerie beaute                  42
+soins                              40
+                                 ...
+video                               1
+gestion du rayon charcuterie        1
+equipement amenagement              1
+materiel informatique               1
+mobilier de jardin                  1
+Name: self, Length: 91, dtype: int64
+nombre de lignes : 54876
+accuracy : 97.80778482396676%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.9
+Détail des erreurs :
+desserts, aide patisserie, die    99
+potages, pates, feculents & au    44
+conserves et plats cuisines       33
+confiserie                        31
+parfumerie beaute                 31
+                                  ..
+hi-fi                              1
+mobilier de jardin                 1
+equipement amenagement             1
+desserts. aide patisserie. die     1
+materiel informatique              1
+Name: self, Length: 83, dtype: int64
+nombre de lignes : 52334
+accuracy : 98.57071884434593%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.95
+Détail des erreurs :
+desserts, aide patisserie, die    34
+parfumerie beaute                 26
+confiserie                        21
+potages, pates, feculents & au    21
+conserves et plats cuisines       18
+                                  ..
+hi-fi                              1
+saucisserie-barbecue               1
+equipement amenagement             1
+volaille a la coupe                1
+4eme/5eme gamme industrielle       1
+Name: self, Length: 78, dtype: int64
+nombre de lignes : 49475
+accuracy : 99.06619504800405%
+//////////////////////////////////
+
+Process finished with exit code 0
+

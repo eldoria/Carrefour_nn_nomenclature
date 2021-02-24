@@ -1,45 +1,43 @@
+from define_parameters import *
 import nltk
-from nltk.corpus import stopwords
 import pandas as pd
-# from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
 import re
 
 
-name_products = "articleShortTitle"
-dep_products = "hypDepartmentDesc"
+name_products = prediction_columnData
+bar_code = prediction_columnKey
 
-base_folder = "./data"
+type_folder = prediction_folder
 
-file_stop_words = f"{base_folder}/stop_words_nltk.txt"
+base_folder = name_folder_data + type_folder + "/"
 
-file_source = f"{base_folder}/carrefour_products.csv"
-file_destination = f"{base_folder}/carrefour_products_cleaned_maj.csv"
-file_destination_2 = f"{base_folder}/carrefour_products_cleaned_min.csv"
+file_source = base_folder + prediction_file
 
+file_stop_words = name_folder_data + stop_words_file
 
-file_source_cleaned_1 = f"{base_folder}/produits_carrefour_nomenclatures_cleaned_1.csv"
-file_source_cleaned_2 = f"{base_folder}/produits_carrefour_nomenclatures_cleaned_2.csv"
-file_dest = f"{base_folder}/produits_clean_nltk.csv"
+file_cleaned_1 = base_folder + type_folder + "_cleaned_1.csv"
+file_cleaned_2 = base_folder + type_folder + "_cleaned_2.csv"
+file_cleaned_3 = base_folder + type_folder + "_cleaned_3.csv"
 
-separator = "$"
+separator = new_separator
 
 
 def clean_csv_carrefour():
-    data = pd.read_csv(file_source, usecols=[name_products, dep_products])
+    data = pd.read_csv(file_source, usecols=[bar_code, name_products], sep=prediction_separator)
 
-    file = open(file_source_cleaned_1, 'w', encoding="utf-8")
-    file.write(name_products + separator + dep_products + "\n")
-    for var1, var2 in zip(data[name_products], data[dep_products]):
+    file = open(file_cleaned_1, 'w', encoding="utf-8")
+    file.write(bar_code + separator + name_products + "\n")
+    for var1, var2 in zip(data[bar_code], data[name_products]):
         file.write(str(var1) + separator + str(var2) + "\n")
     file.close()
 
-    data = pd.read_csv(file_source_cleaned_1, sep=separator)
+    data = pd.read_csv(file_cleaned_1, sep=separator)
 
-    file2 = open(file_source_cleaned_2, 'w', encoding='utf-8')
-    file2.write(name_products + separator + dep_products + "\n")
-    for name, dep in zip(data[name_products], data[dep_products]):
+    file2 = open(file_cleaned_2, 'w', encoding='utf-8')
+    file2.write(bar_code + separator + name_products + "\n")
+    for name, barcode in zip(data[name_products], data[bar_code]):
         name = str(name)
-        dep = str(dep)
+        barcode = str(barcode)
 
         name = name.split(".")
         name = " ".join(name)
@@ -48,20 +46,21 @@ def clean_csv_carrefour():
         name = name.replace(';', ' ')
         name = name.replace('-', ' ')
 
-        file2.write(name + separator + dep + "\n")
+        file2.write(barcode + separator + name + "\n")
     file.close()
 
 
-def create_new_csv(f_stop_words, file_csv, var1, var2, new_file_name):
+def create_new_csv(f_stop_words, file_csv, var1, var2):
     words = read_lines(f_stop_words)
     results = []
 
     data = delete_rows_with_missing_values(file_csv)
+    # data = pd.read_csv(file_csv, sep=separator)
 
-    data_1 = data[var1]
-    data_2 = data[var2]
+    name_products = data[var1]
+    bar_code = data[var2]
 
-    for data in data_1:
+    for data in name_products:
         text_tokens = nltk.tokenize.word_tokenize(data)
         # print(text_tokens)
         name_product = [contains_car(word) for word in text_tokens if not word.lower() in words
@@ -69,15 +68,12 @@ def create_new_csv(f_stop_words, file_csv, var1, var2, new_file_name):
         # print(name_product)
         results.append(" ".join(name_product))
 
-    file = open(new_file_name, 'w', encoding="utf-8")
-    file_2 = open(file_destination_2, 'w', encoding='utf-8')
-    file.write(name_products + separator + dep_products + "\n")
-    file_2.write(name_products + separator + dep_products + "\n")
-    for words, labels in zip(results, data_2):
-        val = str(words) + separator + str(labels) + "\n"
-        file.write(val)
-        file_2.write(val.lower())
-    file.close()
+    file_2 = open(file_cleaned_3, 'w', encoding='utf-8')
+    file_2.write(var2 + separator + var1 + "\n")
+    for bar_code, words in zip(bar_code, results):
+        if len(words) != 0:
+            val = str(bar_code) + separator + str(words) + "\n"
+            file_2.write(val.lower())
     file_2.close()
 
 
@@ -107,16 +103,6 @@ def contains_car(word):
         return word
 
 
-def write_words_nltk():
-    nltk.download('stopwords')
-    nltk.download('punkt')
-
-    file = open(file_stop_words, 'w')
-    for words in stopwords.words('french'):
-        file.write(words + "\n")
-    file.close()
-
-
 def read_lines(file):
     file = open(file, 'r')
     result = []
@@ -131,12 +117,18 @@ def read_lines(file):
 
 def delete_rows_with_missing_values(file):
     products = pd.read_csv(file, sep=separator)
+    print(products.shape)
     products = products[~products[name_products].isnull()]
-    products = products[~products[dep_products].isnull()]
+    # products = products[~products[dep_products].isnull()]
+    print(products.shape)
 
     return products
 
 
-if __name__ == "__main__":
+def clean_prediction_data():
     clean_csv_carrefour()
-    create_new_csv(file_stop_words, file_source_cleaned_2, name_products, dep_products, file_destination)
+    create_new_csv(file_stop_words, file_cleaned_2, name_products, bar_code)
+
+
+if __name__ == "__main__":
+    clean_prediction_data()
