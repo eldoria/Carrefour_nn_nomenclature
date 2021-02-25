@@ -16,9 +16,9 @@ training_file = "MarketPlace_products.csv"
 training_cleanedFile = "MarketPlace_cleaned_3.csv"
 training_columnKey = "tradeItemKey"
 training_columnData = "tradeItemMarketingDescription"
-training_columnToPredict = "classificationDescription"
+training_columnToPredict = "classificationCode"
 training_columns = [training_columnKey, training_columnData, training_columnToPredict, ""]
-training_separator = ","
+training_separator = "$"
 nb_size_min = 1
 nb_size_max = 13
 

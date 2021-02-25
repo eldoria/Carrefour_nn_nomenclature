@@ -24,7 +24,7 @@ separator = new_separator
 
 
 def clean_csv_carrefour():
-    data = pd.read_csv(file_source, usecols=[bar_code, name_products, name_cat], sep=training_separator)
+    data = pd.read_csv(file_source, usecols=[bar_code, name_products, name_cat], sep=training_separator, dtype=str)
 
     file = open(file_cleaned_1, 'w', encoding="utf-8")
     file.write(bar_code + separator + name_products + separator + name_cat + "\n")
@@ -32,7 +32,7 @@ def clean_csv_carrefour():
         file.write(str(var1) + separator + str(var2) + separator + str(var3) + "\n")
     file.close()
 
-    data = pd.read_csv(file_cleaned_1, sep=separator)
+    data = pd.read_csv(file_cleaned_1, sep=separator, dtype=str)
 
     file2 = open(file_cleaned_2, 'w', encoding='utf-8')
     file2.write(bar_code + separator + name_products + separator + name_cat + "\n")
@@ -119,7 +119,7 @@ def read_lines(file):
 
 
 def delete_rows_with_missing_values(file):
-    products = pd.read_csv(file, sep=separator)
+    products = pd.read_csv(file, sep=separator, dtype=str)
     print(products.shape)
     products = products[~products[name_products].isnull()]
     products = products[~products[name_cat].isnull()]

@@ -1,5 +1,7 @@
 from train_model import *
 from cleaning_training_data import file_cleaned_3
+import tensorflow
+from tensorflow import keras
 
 file_data = file_cleaned_3
 file_with_predictions = name_folder_data + training_folder + "/" + training_folder + "_prediction.csv"
@@ -24,7 +26,7 @@ def encode_x(x, dict_words):
 
 
 def write_prediction(x, dict_categories, model):
-    prediction = model.predict(x)
+    prediction = model.predict(x, batch_size=2048)
     tab_percentage, tab_categories = return_max_prediction(prediction, dict_categories)
     file = open(file_data, 'r')
     file2 = open(file_with_predictions, 'w', encoding='utf-8')
@@ -40,9 +42,43 @@ def write_prediction(x, dict_categories, model):
         else:
             file2.write(line[:-1] + separator + str_for_no_prediction + separator + str_for_no_prediction + '\n')
         i += 1
+        if i == 1025:
+            exit()
 
     file.close()
     file2.close()
+    '''
+    print(x.shape)
+    x_parts = np.array_split(x, 20)
+    count = 1
+
+    data = pd.read_csv(file_data, header=None)
+
+    file2 = open(file_with_predictions, 'w', encoding='utf-8')
+    file2.write(str(data.iloc[0].values[0]) + separator + columnName_prediction +
+                separator + percentage_prediction + '\n')
+
+    for x_part in x_parts:
+        prediction = model.predict(x_part)
+        tab_percentage, tab_categories = return_max_prediction(prediction, dict_categories)
+
+        for i, value in enumerate(x_part):
+            line = data.iloc[count].values[0]
+            if count_nb_words(line) >= nb_size_min:
+
+                file2.write(line + separator + tab_categories[i] + separator + str(tab_percentage[i]) + '\n')
+            else:
+                file2.write(line + separator + str_for_no_prediction + separator + str_for_no_prediction + '\n')
+            count += 1
+
+    file2.close()
+    '''
+
+
+def return_line(data, index):
+    print(data[index])
+    print(data[index:index])
+    exit()
 
 
 def count_nb_words(line):
@@ -67,6 +103,7 @@ def return_max_prediction(values, dict_cat):
 def from_data_to_values(var1, dict_words, dict_categories):
     # data = data.astype(str)
     data = pd.read_csv(file_data, sep=separator)
+
     x = data[var1]
     # x, y = delete_duplicate(x, y)
     # x, y = eliminate_too_short_names_of_products(x, y, nb_size_min - 1)
@@ -121,4 +158,3 @@ def use_model_prediction():
 
 if __name__ == "__main__":
     use_model_prediction()
-    evaluate_score()

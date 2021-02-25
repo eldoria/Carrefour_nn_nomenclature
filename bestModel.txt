@@ -411,3 +411,129 @@ accuracy : 99.06619504800405%
 
 Process finished with exit code 0
 
+
+
+
+
+On garde les prédictions supérieures ou égales à : 0
+Détail des erreurs :
+25972    3660
+2197     3190
+1909     2937
+25997    2740
+28095    2327
+         ...
+26630       1
+26313       1
+29003       1
+26763       1
+2623        1
+Name: self, Length: 969, dtype: int64
+nombre de lignes : 469546
+accuracy : 69.43366571113373%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.5
+Détail des erreurs :
+25972    2586
+1909     2266
+2197     2053
+25997    1999
+28078    1969
+         ...
+26820       1
+26577       1
+28371       1
+26323       1
+26346       1
+Name: self, Length: 869, dtype: int64
+nombre de lignes : 398821
+accuracy : 76.61983696946751%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.6
+Détail des erreurs :
+25972    2447
+1909     2007
+25997    1706
+2142     1635
+27112    1611
+         ...
+26903       1
+26647       1
+26517       1
+26197       1
+26577       1
+Name: self, Length: 811, dtype: int64
+nombre de lignes : 367936
+accuracy : 79.16077796138458%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.7
+Détail des erreurs :
+25972    2063
+27112    1445
+1909     1343
+28078    1274
+25997    1213
+         ...
+26335       1
+26591       1
+26841       1
+27001       1
+26243       1
+Name: self, Length: 738, dtype: int64
+nombre de lignes : 333902
+accuracy : 82.1103197944307%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.8
+Détail des erreurs :
+25972    1702
+27112    1144
+2181     1050
+28078     970
+28095     882
+         ...
+26800       1
+26583       1
+26055       1
+26499       1
+26907       1
+Name: self, Length: 656, dtype: int64
+nombre de lignes : 296459
+accuracy : 85.01108079026105%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.9
+Détail des erreurs :
+25972    1080
+27112     898
+2181      797
+28078     695
+2146      667
+         ...
+26729       1
+27012       1
+26525       1
+26583       1
+26126       1
+Name: self, Length: 529, dtype: int64
+nombre de lignes : 246642
+accuracy : 88.81780069898882%
+//////////////////////////////////
+On garde les prédictions supérieures ou égales à : 0.95
+Détail des erreurs :
+27112    748
+2181     731
+25972    702
+2146     580
+28078    533
+        ...
+26554      1
+27146      1
+26719      1
+26499      1
+27145      1
+Name: self, Length: 407, dtype: int64
+nombre de lignes : 206057
+accuracy : 91.15875704295414%
+//////////////////////////////////
+
+Process finished with exit code 0
+

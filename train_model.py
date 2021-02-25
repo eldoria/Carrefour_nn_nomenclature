@@ -10,7 +10,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Dense, Embedding, LayerNormalization, GRU, Dropout
+from tensorflow.keras.layers import Dense, Embedding, LayerNormalization, GRU, Dropout, Activation
 
 name_products = training_columnData
 cat_products = training_columnToPredict
@@ -176,15 +176,18 @@ def create_model(size_y, nb_words):
                   name='embeddings'),
         LayerNormalization(),
         Dropout(0.4),
-        GRU(64, dropout=dropout, return_sequences=True, activation=keras.activations.relu),
+        GRU(64, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        GRU(32, dropout=dropout, return_sequences=True, activation=keras.activations.relu),
+        Activation(activation=keras.activations.relu),
+        GRU(32, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        GRU(16, dropout=dropout, activation=keras.activations.relu),
+        Activation(activation=keras.activations.relu),
+        GRU(16, dropout=dropout),
         LayerNormalization(),
-        Dense(64),
+        Activation(activation=keras.activations.relu),
+        Dense(2048),
         LayerNormalization(),
-        Dense(48),
+        Dense(1524),
         Dense(size_y, activation=keras.activations.softmax)
     ])
     return model
@@ -224,8 +227,6 @@ def neural_network(size_y, nb_words, x_train, x_test, y_train, y_test):
 
 def train_model():
     x_train, x_test, y_train, y_test, size_y, nb_words = get_data(file_for_training, 0.2)
-
-    exit()
 
     all_logs = []
 
