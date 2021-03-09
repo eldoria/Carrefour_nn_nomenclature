@@ -1,17 +1,20 @@
 from train_model import *
 from cleaning_training_data import file_cleaned_3
-import tensorflow
-from tensorflow import keras
 
 file_data = file_cleaned_3
-file_with_predictions = name_folder_data + training_folder + "/" + training_folder + "_prediction.csv"
-separator = '$'
+file_with_predictions = folder_data + training_name_folder + "/" + training_subName_folder + "/" + prediction_folder + "/" + prediction_file
+file_dict_categories = folder_model + training_name_folder + "/" + training_subName_folder + "/dict_categories.pickle"
+file_dict_words = folder_model + training_name_folder + "/" + training_subName_folder + "/word_index.pickle"
+file_weights = file_weights
 
-value_predicted = training_columnToPredict
+separator = new_separator
+
+value_predicted = columnName_prediction
 percentage_prediction = columnName_percentage
 str_for_no_prediction = str_for_no_prediction
 
 name_products = training_columnData
+columnName_prediction = training_columnToPredict
 
 
 def encode_x(x, dict_words):
@@ -25,25 +28,33 @@ def encode_x(x, dict_words):
     return x
 
 
+def encode_y(y, dict_categories):
+    result = []
+    for val in y:
+        val = str(val)
+        result.append(dict_categories[val])
+    return np.array(result)
+
+
 def write_prediction(x, dict_categories, model):
-    prediction = model.predict(x, batch_size=2048)
+    prediction = model.predict(x)
     tab_percentage, tab_categories = return_max_prediction(prediction, dict_categories)
+
     file = open(file_data, 'r')
     file2 = open(file_with_predictions, 'w', encoding='utf-8')
     i = -1
     for line in file:
         if i == -1:
-            file2.write(line[:-1] + separator + columnName_prediction +
+            file2.write(line[:-1] + separator + value_predicted +
                         separator + percentage_prediction + '\n')
+            i += 1
         elif count_nb_words(line) >= nb_size_min:
 
             file2.write(line[:-1] + separator + tab_categories[i] +
                         separator + str(tab_percentage[i]) + '\n')
+            i += 1
         else:
             file2.write(line[:-1] + separator + str_for_no_prediction + separator + str_for_no_prediction + '\n')
-        i += 1
-        if i == 1025:
-            exit()
 
     file.close()
     file2.close()
@@ -100,31 +111,46 @@ def return_max_prediction(values, dict_cat):
     return val_percentage, categories_predicted
 
 
-def from_data_to_values(var1, dict_words, dict_categories):
+def return_index_max_prediction():
+    pass
+
+
+def from_data_to_values(var1, dict_words, dict_categories, model):
     # data = data.astype(str)
     data = pd.read_csv(file_data, sep=separator)
 
     x = data[var1]
+    y = data[training_columnToPredict]
     # x, y = delete_duplicate(x, y)
     # x, y = eliminate_too_short_names_of_products(x, y, nb_size_min - 1)
 
     x = encode_x(x, dict_words)
+    y = encode_y(y, dict_categories)
+
+
+
+    model.compile(optimizer=keras.optimizers.Adam(),
+                  loss=keras.losses.sparse_categorical_crossentropy,
+                  metrics=[keras.metrics.sparse_categorical_accuracy])
+    print(x.shape)
+    print(len(y))
+    print(model.evaluate(x, y))
 
     return x
 
 
 def neural_network_feed_forward(var1):
-    dict_categories = mpu.io.read('model/Carrefour/dict_categories.pickle')
-    dict_words = mpu.io.read('model/Carrefour/word_index.pickle')
+    dict_categories = mpu.io.read(file_dict_categories)
+    dict_words = mpu.io.read(file_dict_words)
 
     print(dict_categories)
 
     model = create_model(len(dict_categories), len(dict_words))
-    # model = create_model(len(dict_categories), len(embeddings))
-    model.load_weights("model/Carrefour/weigths.ckpt").expect_partial()
+
+    model.load_weights(file_weights).expect_partial()
     model.summary()
 
-    x = from_data_to_values(var1, dict_words, dict_categories)
+    x = from_data_to_values(var1, dict_words, dict_categories, model)
 
     write_prediction(x, dict_categories, model)
 

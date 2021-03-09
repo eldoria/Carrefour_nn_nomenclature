@@ -3,22 +3,23 @@ import nltk
 import pandas as pd
 import re
 
-
 name_products = training_columnData
 bar_code = training_columnKey
 name_cat = training_columnToPredict
 
-type_folder = training_folder
+type_folder = training_data_folder
 
-base_folder = name_folder_data + type_folder + "/"
+base_folder = folder_data + training_name_folder + "/"
 
-file_source = base_folder + training_file
+file_source = base_folder + training_data_folder + "/" + training_file
 
-file_stop_words = name_folder_data + stop_words_file
+file_stop_words = folder_data + stop_words_file
 
-file_cleaned_1 = base_folder + type_folder + "_cleaned_1.csv"
-file_cleaned_2 = base_folder + type_folder + "_cleaned_2.csv"
-file_cleaned_3 = base_folder + type_folder + "_cleaned_3.csv"
+path_to_cleaned_data = training_subName_folder + "/" + training_cleaned_folder + "/" + training_subName_folder
+
+file_cleaned_1 = base_folder + path_to_cleaned_data + "_cleaned_1.csv"
+file_cleaned_2 = base_folder + path_to_cleaned_data + "_cleaned_2.csv"
+file_cleaned_3 = base_folder + path_to_cleaned_data + "_cleaned_3.csv"
 
 separator = new_separator
 
@@ -44,9 +45,12 @@ def clean_csv_carrefour():
         name = name.split(".")
         name = " ".join(name)
 
-        name = name.replace(',', '.')
-        name = name.replace(';', ' ')
-        name = name.replace('-', ' ')
+        name = re.sub("[-;/]", " ", name)
+        name = re.sub(",", ".", name)
+        name = re.sub("[éèêë]", "e", name)
+        name = re.sub("[àâä]", "e", name)
+        name = re.sub("[ôö]", "o", name)
+        name = re.sub("[ùûü]", "u", name)
 
         file2.write(barcode + separator + name + separator + cat + "\n")
     file.close()
@@ -81,7 +85,7 @@ def create_new_csv(f_stop_words, file_csv, var1, var2, var3):
 
 
 def contains_car(word):
-    test_grammes = re.search("[0-9]+[mk]?gr?", word.lower())
+    test_grammes = re.search("^[0-9]+.?[0-9]*[mk]?gr?", word.lower())
     test_grammes_2 = re.search("^(mg|g|gr)$", word.lower())
     test_litres = re.search("^[0-9]+.?[0-9]*[mcd]?l", word.lower())
     test_litres_2 = re.search("^(ml|cl|dl|l)$", word.lower())
@@ -92,7 +96,7 @@ def contains_car(word):
     test_car_2 = re.search("^(l'|d')", word.lower())
     test_car_3 = re.search("^-*$", word.lower())
     test_absence_carre = re.search("²", word.lower())
-    test_alpha_num = re.search("^[a-z]+$", word.lower())
+    test_alpha_num = re.search("^[a-z Ü-ü]+$", word.lower())
 
     if (test_grammes or test_grammes_2) and test_absence_carre is None:
         return "grammes"
@@ -107,7 +111,7 @@ def contains_car(word):
 
 
 def read_lines(file):
-    file = open(file, 'r')
+    file = open(file, 'r', encoding='ISO-8859-1')
     result = []
     for line in file:
         # Get rid of the "\n"
@@ -123,6 +127,7 @@ def delete_rows_with_missing_values(file):
     print(products.shape)
     products = products[~products[name_products].isnull()]
     products = products[~products[name_cat].isnull()]
+    products.drop_duplicates()
     print(products.shape)
 
     return products

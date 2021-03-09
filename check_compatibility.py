@@ -2,8 +2,8 @@ from define_parameters import *
 import pandas as pd
 import numpy as np
 
-training_cleanedFile = name_folder_data + training_folder + "/" + training_cleanedFile
-prediction_cleanedFile = name_folder_data + prediction_folder + "/" + prediction_cleanedFile
+training_cleanedFile = folder_data + training_data_folder + "/" + training_cleanedFile
+prediction_cleanedFile = folder_data + prediction_folder + "/" + prediction_cleanedFile
 training_y = training_columnToPredict
 prediction_y = prediction_columnToPredict
 

@@ -18,12 +18,17 @@ cat_products = training_columnToPredict
 ref_batch_size = 4096.0
 ref_lr = 0.0009
 batch_size = 2048
-dropout = 0.25
+dropout = dropout
 
 nb_size_min = nb_size_min
 nb_size_max = nb_size_max
 
-file_for_training = name_folder_data + training_folder + "/" + training_cleanedFile
+file_for_training = folder_data + training_name_folder + "/" + training_subName_folder + "/" + training_cleaned_folder + "/" + training_cleaned_file
+folder_prediction = folder_model + prediction_name_folder + "/" + prediction_subName_folder + "/"
+file_dict = folder_prediction + "dict_categories.pickle"
+file_wordIndex = folder_prediction + "word_index.pickle"
+file_weights = folder_prediction + "weigths.ckpt"
+
 
 # 28 200 mots maximum à garder et remplace les mots inconnus avec le token out-of-value
 tokenizer = Tokenizer(num_words=20000, oov_token="<OOV>")
@@ -32,10 +37,10 @@ tokenizer = Tokenizer(num_words=20000, oov_token="<OOV>")
 def plot_log(all_logs):
     for logs in all_logs:
         losses = logs.history['loss']
-        name = logs.history['name'] + " - model"
+        name = logs.history['name'] + " - training"
         plt.plot(list(range(len(losses))), losses, label=name)
         losses = logs.history['val_loss']
-        name = logs.history['name'] + " - testing"
+        name = logs.history['name'] + " - validation"
         plt.plot(list(range(len(losses))), losses, label=name)
     plt.xlabel("number of epochs")
     plt.ylabel("error")
@@ -45,10 +50,10 @@ def plot_log(all_logs):
 
     for logs in all_logs:
         metric = logs.history['sparse_categorical_accuracy']
-        name = logs.history['name'] + " - model"
+        name = logs.history['name'] + " - training"
         plt.plot(list(range(len(metric))), metric, label=name)
         metric = logs.history['val_sparse_categorical_accuracy']
-        name = logs.history['name'] + " - testing"
+        name = logs.history['name'] + " - validation"
         plt.plot(list(range(len(metric))), metric, label=name)
     plt.xlabel("number of epochs")
     plt.ylabel("accuracy")
@@ -75,13 +80,14 @@ def auto_encoder_x(training_data, testing_data):
 
 
 def auto_encoder_y(label_name):
+    print(label_name.shape)
     possibilities = label_name.unique()
     size = possibilities.shape[0]
 
     result = []
     categories = {possibilities[i]: i for i in range(size)}
     print(categories)
-    mpu.io.write('model/Carrefour/dict_categories.pickle', categories)
+    mpu.io.write(file_dict, categories)
 
     for l in label_name:
         result.append(categories[l])
@@ -141,7 +147,7 @@ def get_data(f, repartition):
 
     print("nombre de données avant la supression des doublons : " + str(len(x)))
 
-    x, y = delete_duplicate(x, y)
+    # x, y = delete_duplicate(x, y)
 
     print("nombre de données après la supression de doublons : " + str(len(x)))
 
@@ -155,7 +161,6 @@ def get_data(f, repartition):
 
     size_y = y.nunique()
     print("nombre de catégories : " + str(size_y))
-
     # Associe des numéros pour chaque rayon et transforme les numéros en un vecteur binaire
     # ex : 28 rayons, le rayon ayant pour num 0 aura comme vecteur : (1, 0, 0, 0 , ..., 0) le vecteur ayant 28 places
     # car il y a 28 valeurs différentes de y
@@ -176,18 +181,24 @@ def create_model(size_y, nb_words):
                   name='embeddings'),
         LayerNormalization(),
         Dropout(0.4),
+
         GRU(64, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        Activation(activation=keras.activations.relu),
+
         GRU(32, dropout=dropout, return_sequences=True),
         LayerNormalization(),
-        Activation(activation=keras.activations.relu),
+
         GRU(16, dropout=dropout),
         LayerNormalization(),
-        Activation(activation=keras.activations.relu),
+
         Dense(2048),
         LayerNormalization(),
+        Dropout(dropout),
+
         Dense(1524),
+        LayerNormalization(),
+        Dropout(dropout),
+
         Dense(size_y, activation=keras.activations.softmax)
     ])
     return model
@@ -202,21 +213,19 @@ def neural_network(size_y, nb_words, x_train, x_test, y_train, y_test):
                   loss=keras.losses.sparse_categorical_crossentropy,
                   metrics=[keras.metrics.sparse_categorical_accuracy])
 
-    # model.save("./model/model.h5") -> ne pas faire sinon pb shape embeddings
-
-    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath="model/Carrefour/weigths.ckpt", save_weights_only=True,
+    model_saver = tf.keras.callbacks.ModelCheckpoint(filepath=file_weights, save_weights_only=True,
                                                      save_best_only=True, monitor="val_sparse_categorical_accuracy",
                                                      verbose=1)
 
     logs = model.fit(x_train, y_train, batch_size=batch_size, epochs=100, validation_data=(x_test, y_test),
-                     callbacks=[keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=15),
+                     callbacks=[keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=10),
                                 model_saver], verbose=2)
 
-    mpu.io.write('model/Carrefour/word_index.pickle', tokenizer.word_index)
+    mpu.io.write(file_wordIndex, tokenizer.word_index)
 
-    score_test = model.evaluate(x_test, y_test, verbose=0)
+    score_test = model.evaluate(x_test, y_test, verbose=0, batch_size=batch_size)
     print(score_test)
-    score_train = model.evaluate(x_train, y_train, verbose=0)
+    score_train = model.evaluate(x_train, y_train, verbose=0, batch_size=batch_size)
     print(score_train)
     score_total = score_train[1] * 0.8 + score_test[1] * 0.2
     print("/////////////////")
@@ -232,7 +241,7 @@ def train_model():
 
     logs = neural_network(size_y, nb_words, x_train, x_test, y_train, y_test)
 
-    logs.history['name'] = "LSTM - size_min_mot : " + str(nb_size_min) + " - nb_max : " + str(nb_size_max)
+    logs.history['name'] = "GRU - size_min_mot : " + str(nb_size_min) + " - nb_max : " + str(nb_size_max)
 
     all_logs.append(logs)
 
